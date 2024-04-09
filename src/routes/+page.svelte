@@ -1,22 +1,30 @@
 <script lang="ts">
-    import type { PageData } from "../../.svelte-kit/types/src/routes/$types";
-
     import DataChart from "$lib/components/DataChart.svelte";
     import DateRangeSelection from "$lib/components/DateRangeSelection.svelte";
 
-    export let data: PageData;
+    let range: string;
 
-    let dates: string[] = []
-    let temps: number[] = []
-    let humidity: number[] = []
+    const getData = async () => {
+        const response = await fetch('/api/data-fetcher', {
+            method: 'POST',
+            body: JSON.stringify({ range }),
+            headers: {
+                'content-type': 'application/json',
+            }
+        });
+        return await response.json();
+    }
 
-    for (let entry of data.entries) {
-        dates.push(entry.createdAt.toISOString())
-        temps.push(entry.temp)
-        humidity.push(entry.humidity)
+    let promise = getData();
+    $: if (range) {
+        promise = getData();
     }
 </script>
-<main>
-    <DateRangeSelection />
-    <DataChart {dates} tempData={temps} humidityData={humidity} />
-</main>
+<DateRangeSelection bind:range={range} />
+{#await promise}
+    <p>Generating Chart...</p>
+{:then res}
+    <main>
+        <DataChart data={res} />
+    </main>
+{/await}

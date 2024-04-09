@@ -2,16 +2,22 @@
     import { Chart, type ChartConfiguration, type ChartOptions } from "chart.js/auto";
     import { onMount } from "svelte";
 
-    export let dates: string[], tempData: number[], humidityData: number[];
+    export let data: {
+        dates: string[],
+        humidity: number[],
+        temps: number[]
+    };
+
+    console.log(data);
 
     let tempChart: HTMLCanvasElement;
 
     const chartData = {
-        labels: dates,
+        labels: data.dates,
         datasets: [
             {
                 label: "Temperature",
-                data: tempData,
+                data: data.temps,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1,
@@ -19,7 +25,7 @@
             },
             {
                 label: "Humidity",
-                data: humidityData,
+                data: data.humidity,
                 fill: false,
                 borderColor: 'rgb(255, 50, 50)',
                 tension: 0.1,
