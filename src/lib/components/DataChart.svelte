@@ -1,14 +1,9 @@
 <script lang="ts">
     import { Chart, type ChartConfiguration, type ChartOptions } from "chart.js/auto";
     import { onMount } from "svelte";
+    import type { ChartData } from "../../routes/api/data-fetcher/+server";
 
-    export let data: {
-        dates: string[],
-        humidity: number[],
-        temps: number[]
-    };
-
-    console.log(data);
+    export let data: ChartData;
 
     let tempChart: HTMLCanvasElement;
 
