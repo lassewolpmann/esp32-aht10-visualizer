@@ -2,10 +2,10 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import prisma from "$lib/prisma";
 
-export interface ChartData {
+export interface APIChartData {
     dates: string[],
-    temps: string[],
-    humidity: string[]
+    temps: number[],
+    humidity: number[]
 }
 
 interface TempHumidityData {
@@ -15,19 +15,19 @@ interface TempHumidityData {
 
 export const POST: RequestHandler = async ({ request }) => {
     const { range } = await request.json();
-    let step: number = 0;
+    let step: number;
 
     if (range === '3600000') { // range of one hour
         step = 60 * 1000; // step of one minute
     } else if (range === '86400000') { // range of 24 hours
         step = 15 * 60 * 1000; // step of 15 minutes
     } else if (range === '604800000') { // range of seven days
-        step = 60 * 60 * 1000; // step of one hour
+        step = 30 * 60 * 1000; // step of one hour
+    } else {
+        step = +range / 60;
     }
 
-    if (step === 0) return json({} as ChartData)
-
-    let chartData: ChartData = {
+    let chartData: APIChartData = {
         dates: [],
         temps: [],
         humidity: []
@@ -77,8 +77,8 @@ export const POST: RequestHandler = async ({ request }) => {
             let averageHumidity = humiditySum / data.humidityValues.length;
 
             chartData.dates.push(new Date(+timestamp).toLocaleString("fi"));
-            chartData.temps.push(averageTemp.toPrecision(4));
-            chartData.humidity.push(averageHumidity.toPrecision(4));
+            chartData.temps.push(+averageTemp.toPrecision(4));
+            chartData.humidity.push(+averageHumidity.toPrecision(4));
         }
     }
 

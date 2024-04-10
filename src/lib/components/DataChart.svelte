@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { Chart, type ChartConfiguration, type ChartOptions } from "chart.js/auto";
+    import { Chart, type ChartConfiguration, type ChartOptions, type ChartData } from "chart.js/auto";
     import { onMount } from "svelte";
-    import type { ChartData } from "../../routes/api/data-fetcher/+server";
+    import type { APIChartData } from "../../routes/api/data-fetcher/+server";
 
-    export let data: ChartData;
+    export let data: APIChartData;
 
     let tempChart: HTMLCanvasElement;
 
-    const chartData = {
+    const chartData: ChartData = {
         labels: data.dates,
         datasets: [
             {
@@ -42,7 +42,8 @@
                 },
                 ticks: {
                     callback: function(value: string | number) {
-                        return value + ' °C';
+                        value = +value;
+                        return value.toPrecision(3) + ' °C';
                     }
                 }
             },
@@ -59,7 +60,8 @@
                 },
                 ticks: {
                     callback: function(value: string | number) {
-                        return value + ' %rH';
+                        value = +value;
+                        return value.toPrecision(3) + ' %rH';
                     }
                 }
             }
