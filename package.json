@@ -27,6 +27,7 @@
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^5.12.1",
+		"@sveltejs/adapter-node": "^5.0.1",
 		"chart.js": "^4.4.2"
 	}
 }
