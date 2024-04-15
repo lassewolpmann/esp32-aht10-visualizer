@@ -11,8 +11,6 @@ EXPOSE 3000
 RUN npx prisma db pull
 RUN mkdir -p prisma/migrations/0_init
 RUN npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql
-RUN npx prisma migrate resolve --applied 0_init
-RUN npm install @prisma/client
-RUN npx prisma generate
-RUN ["npm", "run", "build"]
+RUN npx prisma migrate resolve --applied 0_init; npm install @prisma/client; npx prisma generate
+RUN npm run build
 CMD ["node", "build"]
