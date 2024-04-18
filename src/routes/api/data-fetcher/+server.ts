@@ -76,7 +76,13 @@ export const POST: RequestHandler = async ({ request }) => {
             const humiditySum = data.humidityValues.reduce((sum, current) => sum + current, 0);
             let averageHumidity = humiditySum / data.humidityValues.length;
 
-            chartData.dates.push(new Date(+timestamp).toLocaleString("fi"));
+            chartData.dates.push(new Date(+timestamp).toLocaleString('fi', {
+                weekday: 'short',
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            }));
             chartData.temps.push(+averageTemp.toPrecision(4));
             chartData.humidity.push(+averageHumidity.toPrecision(4));
         }
